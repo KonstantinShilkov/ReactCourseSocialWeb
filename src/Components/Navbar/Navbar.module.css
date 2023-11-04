@@ -1,0 +1,35 @@
+.nav{
+    grid-area: n;
+    background-color:rgb(99, 153, 179);
+    padding: 25px;
+  }
+  
+.item a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+.item a.activeLink {
+  color: rgb(15, 100, 143);
+}
+
+.itemUsers a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-size: 19px;
+}
+
+.itemUsers a.activeLink {
+  color: rgb(15, 100, 143);
+}
+
+.itemUsers {
+  margin-top: 10px;
+  margin-bottom: 20px ;
+}
+
+.sidebarUsers {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
