@@ -1,30 +1,39 @@
 import React from 'react';
 import s from "./Users.module.css";
-import axios from 'axios';
 import defaultAvatar from "../../assets/images/defaultAvatar.jpeg"
+import { NavLink } from 'react-router-dom';
 
-class Users extends React.Component {
+let Users = (props) => {
 
-componentDidMount() {
-    console.log('request')
-axios.get('https://social-network.samuraijs.com/api/1.0/users').then(response => {
-            this.props.setUsers(response.data.items)
-        })
-}
+    let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize)
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+        pages.push(i);
+    }
 
-    render() { 
-        // debugger
-        return <div>
+    return (
+
+        <div>
+            <div>
+                {pages.map(p => {
+                    return <span onClick={(e) => { props.onPageChanged(p); }} className={props.currentPage === p ? s.selectedPage : undefined} >{p}</span>
+                })}
+            </div>
             {
-                this.props.users.map(u => <div key={u.id} >
+                props.users.map(u => <div key={u.id} >
                     <span>
                         <div >
-                            <img src={u.photos.small != null ? u.photos.small : defaultAvatar} className={s.userPhoto} />
+                            <NavLink to={"/profile/" + u.id} >
+                                <img src={u.photos.small != null ? u.photos.small : defaultAvatar} className={s.userPhoto} />
+                            </NavLink>
                         </div>
                         <div>
+
                             {u.followed
-                                ? <button onClick={() => { this.props.unfollow(u.id) }}> Unfollow</button>
-                                : <button onClick={() => { this.props.follow(u.id) }}>Follow</button>}
+                                ? <button disabled={props.followingInProgress.some(id => id === u.id)}
+                                    onClick={() => { props.unfollow(u.id) }}> Unfollow</button>
+                                : <button disabled={props.followingInProgress.some(id => id === u.id)}
+                                    onClick={() => { props.follow(u.id) }}> Follow </button>}
                         </div>
                     </span>
                     <span>
@@ -41,7 +50,8 @@ axios.get('https://social-network.samuraijs.com/api/1.0/users').then(response =>
                 </div>)
             }
         </div>
-    }
+    )
 }
+
 export default Users
 

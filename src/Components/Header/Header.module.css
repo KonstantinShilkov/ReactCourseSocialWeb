@@ -8,4 +8,11 @@
     /* hight:auto */
   }
 
-  
+  .loginBlock{
+    float:right;
+
+  }
+
+  .loginBlock a{
+    color:darkgray
+  }
