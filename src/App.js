@@ -10,30 +10,49 @@ import UsersContainer from './Components/Users/UsersContainer';
 import ProfileContainer from './Components/Profile/ProfileContainer';
 import HeaderContainer from './Components/Header/HeaderContainer';
 import Login from './Components/Login/Login';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import {initialazeApp} from './redux/app-reducer'
+import Preloader from './Components/Common/Preloader/Preloader';
 
-const App = () => {
-  return (
-    <div className='app-wrapper'>
-      <HeaderContainer />
-      <NavbarContainer />
-      <div className='app-wrapper-content'>
-        <Routes>
-          <Route path="/dialogs" element={<DialogsContainer />}/>
-          <Route path="/profile" element={<ProfileContainer/>} >
-          <Route path= ":useId" element={<ProfileContainer/>}/> 
-          </Route>
-          <Route path="/news" Component={News} />
-          <Route path="/music" Component={Music} />
-          <Route path="/settings" Component={Settings} />
-          <Route path="/users" element={<UsersContainer/>} />
-          <Route path="/login" Component={Login} />
-        </Routes>
+class App extends React.Component {
+  componentDidMount() {
+    this.props.initialazeApp()
+  }
+  render() {
+    if (!this.props.initialazed){
+    return <Preloader/>
+    }
+    
+    return (
+      <div className='app-wrapper'>
+        <HeaderContainer />
+        <NavbarContainer />
+        <div className='app-wrapper-content'>
+          <Routes>
+            <Route path="/dialogs" element={<DialogsContainer />} />
+            <Route path="/profile" element={<ProfileContainer />} >
+              <Route path=":useId?" element={<ProfileContainer />} />
+            </Route>
+            <Route path="/news" Component={News} />
+            <Route path="/music" Component={Music} />
+            <Route path="/settings" Component={Settings} />
+            <Route path="/users" element={<UsersContainer />} />
+            <Route path="/login" Component={Login} />
+          </Routes>
+        </div>
       </div>
-    </div>
-  );
-};
+    )
+  }
+}
 
-export default App;
+
+const mapStateToProps = (state) => ({
+  initialazed : state.app.initialazed
+})
+
+export default compose(
+  connect(mapStateToProps, { initialazeApp }))(App)
 
 
 
