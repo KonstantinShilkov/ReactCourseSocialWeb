@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import News from './Components/News/News';
 import Music from './Components/Music/Music';
 import Settings from './Components/Settings/Settings';
@@ -11,9 +11,10 @@ import ProfileContainer from './Components/Profile/ProfileContainer';
 import HeaderContainer from './Components/Header/HeaderContainer';
 import Login from './Components/Login/Login';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import {initialazeApp} from './redux/app-reducer'
 import Preloader from './Components/Common/Preloader/Preloader';
+import store from './redux/redux-store';
 
 class App extends React.Component {
   componentDidMount() {
@@ -46,14 +47,24 @@ class App extends React.Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({
   initialazed : state.app.initialazed
 })
 
-export default compose(
+const AppContainer = compose(
   connect(mapStateToProps, { initialazeApp }))(App)
 
+const MainApp = (props) => {
+    return <BrowserRouter>
+    {/* <React.StrictMode> */}
+    <Provider store={store}>
+        <AppContainer />
+    </Provider>
+    {/* </React.StrictMode> */}
+</BrowserRouter>
+  }
+
+  export default MainApp;
 
 
 

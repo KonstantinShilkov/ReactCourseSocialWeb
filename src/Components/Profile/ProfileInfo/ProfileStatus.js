@@ -6,7 +6,7 @@ class ProfileStatus extends React.Component {
 
     state = {
         editMode: false,
-        statusText: this.props.status
+        status: this.props.status
     }
     onEditMode = () => {
         this.setState({
@@ -17,19 +17,19 @@ class ProfileStatus extends React.Component {
         this.setState({
             editMode: false
         })
-        this.props.putProfileStatus(this.state.statusText)
+        this.props.putProfileStatus(this.state.status)
     }
 
-    onStatusTextChange = (e) => {
+Change = (e) => {
         this.setState({
-            statusText: e.target.value
+            status: e.target.value
         })
     }
     componentDidUpdate(prevProps, prevState) {
 
         if (prevProps.status !== this.props.status) {
             this.setState({
-                statusText: this.props.status
+                status: this.props.status
             })
         }
     }
@@ -43,7 +43,7 @@ class ProfileStatus extends React.Component {
                 }
                 {this.state.editMode &&
                     <div>
-                        <input autoFocus={true} onBlur={this.offEditMode} value={this.state.statusText} onChange={this.onStatusTextChange} />
+                        <input autoFocus={true} onBlur={this.offEditMode} value={this.state.status} onChange={this.Change} />
                     </div>
                 }
             </div>
