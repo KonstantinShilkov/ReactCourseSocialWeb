@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import News from './Components/News/News';
 import Music from './Components/Music/Music';
 import Settings from './Components/Settings/Settings';
-import DialogsContainer from './Components/Dialogs/DialogsContainer';
+// import DialogsContainer from './Components/Dialogs/DialogsContainer';
 import NavbarContainer from './Components/Navbar/NavbarContainer';
 import UsersContainer from './Components/Users/UsersContainer';
 import ProfileContainer from './Components/Profile/ProfileContainer';
@@ -15,6 +15,9 @@ import { Provider, connect } from 'react-redux';
 import {initialazeApp} from './redux/app-reducer'
 import Preloader from './Components/Common/Preloader/Preloader';
 import store from './redux/redux-store';
+
+
+const DialogsContainer = React.lazy(()=>import('./Components/Dialogs/DialogsContainer')) ;
 
 class App extends React.Component {
   componentDidMount() {
