@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ReactCourseSocialWeb/static/css/main.dae63c17.css",
-    "main.js": "/ReactCourseSocialWeb/static/js/main.63fe74ad.js",
+    "main.js": "/ReactCourseSocialWeb/static/js/main.5a7bad13.js",
     "static/css/602.7c74ebc9.chunk.css": "/ReactCourseSocialWeb/static/css/602.7c74ebc9.chunk.css",
     "static/js/602.65c0b778.chunk.js": "/ReactCourseSocialWeb/static/js/602.65c0b778.chunk.js",
     "static/css/320.010bd2d7.chunk.css": "/ReactCourseSocialWeb/static/css/320.010bd2d7.chunk.css",
@@ -10,7 +10,7 @@
     "static/media/loading-thumb-gif-72.gif": "/ReactCourseSocialWeb/static/media/loading-thumb-gif-72.2313428eaeffd634faee.gif",
     "index.html": "/ReactCourseSocialWeb/index.html",
     "main.dae63c17.css.map": "/ReactCourseSocialWeb/static/css/main.dae63c17.css.map",
-    "main.63fe74ad.js.map": "/ReactCourseSocialWeb/static/js/main.63fe74ad.js.map",
+    "main.5a7bad13.js.map": "/ReactCourseSocialWeb/static/js/main.5a7bad13.js.map",
     "602.7c74ebc9.chunk.css.map": "/ReactCourseSocialWeb/static/css/602.7c74ebc9.chunk.css.map",
     "602.65c0b778.chunk.js.map": "/ReactCourseSocialWeb/static/js/602.65c0b778.chunk.js.map",
     "320.010bd2d7.chunk.css.map": "/ReactCourseSocialWeb/static/css/320.010bd2d7.chunk.css.map",
@@ -19,6 +19,6 @@
   },
   "entrypoints": [
     "static/css/main.dae63c17.css",
-    "static/js/main.63fe74ad.js"
+    "static/js/main.5a7bad13.js"
   ]
 }
