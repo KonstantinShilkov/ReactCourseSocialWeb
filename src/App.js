@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import News from './Components/News/News';
@@ -7,7 +7,7 @@ import Settings from './Components/Settings/Settings';
 // import DialogsContainer from './Components/Dialogs/DialogsContainer';
 import NavbarContainer from './Components/Navbar/NavbarContainer';
 import UsersContainer from './Components/Users/UsersContainer';
-import ProfileContainer from './Components/Profile/ProfileContainer';
+// import ProfileContainer from './Components/Profile/ProfileContainer';
 import HeaderContainer from './Components/Header/HeaderContainer';
 import Login from './Components/Login/Login';
 import { compose } from 'redux';
@@ -18,6 +18,8 @@ import store from './redux/redux-store';
 
 
 const DialogsContainer = React.lazy(()=>import('./Components/Dialogs/DialogsContainer')) ;
+const ProfileContainer = React.lazy(()=>import('./Components/Profile/ProfileContainer')) ;
+
 
 class App extends React.Component {
   componentDidMount() {
@@ -33,6 +35,7 @@ class App extends React.Component {
         <HeaderContainer />
         <NavbarContainer />
         <div className='app-wrapper-content'>
+        <Suspense fallback={<Preloader/>}> 
           <Routes>
             <Route path="/dialogs" element={<DialogsContainer />} />
             <Route path="/profile" element={<ProfileContainer />} >
@@ -44,6 +47,7 @@ class App extends React.Component {
             <Route path="/users" element={<UsersContainer />} />
             <Route path="/login" Component={Login} />
           </Routes>
+          </Suspense>
         </div>
       </div>
     )
