@@ -9,9 +9,9 @@
 
 }
 .largeAvatar {
-    width: 95px;
-    height: 95px;
-    border-radius: 45px;
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
 }
 
 .fullName {
@@ -23,11 +23,11 @@
     padding-top: 10px;
 }
 .constacts {
-    padding-top: 25px;
+    padding-left:15px
    
 }
 
 .contactsList{
-    padding-top: 10px;
+    padding-top: 20px;
     display: grid;
 }

@@ -30,7 +30,7 @@ const MyPosts  = (props) => {
 
 console.log("render")
 console.log(props)
-    let postsElements = props.state.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id} />)
+    let postsElements = props.state.map(p => <Post key={p.id} message={p.message} likesCount={p.likesCount} key={p.id} />)
 
     let addNewPost = (formData) => {
         props.addPost(formData.newPostBody)
