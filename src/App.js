@@ -1,95 +1,150 @@
-import React, { Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import News from './Components/News/News';
-import Music from './Components/Music/Music';
-import Settings from './Components/Settings/Settings';
-// import DialogsContainer from './Components/Dialogs/DialogsContainer';
-import NavbarContainer from './Components/Navbar/NavbarContainer';
-import UsersContainer from './Components/Users/UsersContainer';
-// import ProfileContainer from './Components/Profile/ProfileContainer';
-import HeaderContainer from './Components/Header/HeaderContainer';
-import Login from './Components/Login/Login';
-import { compose } from 'redux';
-import { Provider, connect } from 'react-redux';
-import { initialazeApp } from './redux/app-reducer'
-import Preloader from './Components/Common/Preloader/Preloader';
-import store from './redux/redux-store';
+import { Auth } from './components/auth';
+import { db, auth, storage } from './config/firebase';
+import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc} from 'firebase/firestore';
+import {ref, uploadBytes} from "firebase/storage"
 
 
-const DialogsContainer = React.lazy(() => import('./Components/Dialogs/DialogsContainer'));
-const ProfileContainer = React.lazy(() => import('./Components/Profile/ProfileContainer'));
+const App = () => {
+  const [vacancies, setVacancies] = useState([])
+//New Vacancy
+  const [rank, setRank] = useState("")
+  const [vesselType, setVesselType] = useState("")
+  const [salary, setSalary] = useState("")
+  const [duration, setDuration] = useState("")
+  const [joinDate, setJoinDate] = useState("")
+//Update duration of contract
+  const [uptadedDuration, setUptadedDuration] = useState("")
+// upload File
+  const [fileUpload, setFileUpload]=useState(null)
 
 
 
-class App extends React.Component {
+  const vacanciesListRef = collection(db, "vacancies")
+  
+  const getVacancies = async () => {
+    try {
+      const data = await getDocs(vacanciesListRef)
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }))
 
-  catchAllUnhandledErrors =(reason, promise)=>{
-// alert("some error ocured")
-// console.error(promiseRejectionEvent)
-  }
-
-  componentDidMount() {
-    this.props.initialazeApp()
-    window.addEventListener ("unhandledrejection", this.catchAllUnhandledErrors) 
-  }
-
-  componentWillUnmount(){
-    window.removeEventListener ("unhandledrejection", this.catchAllUnhandledErrors) 
-  }
-
-  render() {
-    if (!this.props.initialazed) {
-      return <Preloader />
+      setVacancies(filteredData)
+    } catch (err) {
+      console.error(err)
     }
-
-    return (
-      <div className='app-wrapper'>
-        <HeaderContainer />
-        <NavbarContainer />
-        <div className='app-wrapper-content'>
-          <Suspense fallback={<Preloader />}>
-
-            <Routes>
-              <Route path="/profile" element={<ProfileContainer />} >
-              <Route path=":useId" element={<ProfileContainer />} />
-              </Route>
-              <Route path="/" element={<Navigate to="/profile" replace />} />
-              <Route path="/dialogs" element={<DialogsContainer />} />
-              <Route path="/news" Component={News} />
-              <Route path="/music" Component={Music} />
-              <Route path="/settings" Component={Settings} />
-              <Route path="/users" element={<UsersContainer />} />
-              <Route path="/login" Component={Login} />
-              <Route path="*" element={<div>404 NOT FOUND</div>} />
-            </Routes>
-
-          </Suspense>
-        </div>
-      </div>
-    )
   }
+
+const deletVacancy = async (id) =>{
+  const vacancyDoc = doc(db, "vacancies", id)
+await deleteDoc(vacancyDoc)
+getVacancies()
+
 }
 
-const mapStateToProps = (state) => ({
-  initialazed: state.app.initialazed
+const updateDuration = async (id) =>{
+  const vacancyDoc = doc(db, "vacancies", id )
+await updateDoc(vacancyDoc, {duration:uptadedDuration})
+getVacancies()
+
+}
+
+  useEffect(() => {
+    
+    getVacancies()
+  }, [])
+
+  const addVacancy = async () => {
+    try {
+await addDoc (vacanciesListRef, {rank:rank, 
+  vesselType:vesselType,
+  salary:salary, 
+  duration:duration,
+  joinDate:joinDate,
+  userId: auth?.currentUser?.uid
+
 })
+getVacancies()
 
-const AppContainer = compose(
-  connect(mapStateToProps, { initialazeApp }))(App)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
-const MainApp = (props) => {
-  return <BrowserRouter  >
-    {/* <React.StrictMode> */}
-    <Provider store={store}>
-      <AppContainer />
-    </Provider>
-    {/* </React.StrictMode> */}
-  </BrowserRouter>
+  const uploadFile = async () => {
+if  (!fileUpload) return;
+const filesFolderRef = ref(storage,`projectFiles/${fileUpload.name}`);
+try {
+await uploadBytes (filesFolderRef, fileUpload)
+} catch (err) {
+  console.error(err)
+}
+  }
+
+  return (
+    <div className='app-wrapper'>
+      <div className='app-wrapper-content'>
+        <Auth />
+        <div>
+          <input
+            placeholder='enter Rank'
+            onChange={(e) => setRank(e.target.value)}
+          />
+
+          <input
+            placeholder='enter Type of the Vessel'
+            onChange={(e) => setVesselType(e.target.value)}
+
+          />
+          <input
+            placeholder='enter Salary'
+            onChange={(e) => setSalary(e.target.value)}
+          />
+
+          <input
+            placeholder='enter Join Date'
+            onChange={(e) => setJoinDate(e.target.value)}
+          />
+
+          <input
+            placeholder='enter Contract Duration'
+             type='number'
+            onChange={(e) => setDuration(Number(e.target.value))}
+          />
+
+          <button onClick={addVacancy}>Add new Vacancy</button>
+
+
+        </div>
+
+        <div>
+          {vacancies.map((vacancy)  => (
+            <div key={vacancy.id}>
+              <h1>{vacancy.rank} on {vacancy.vesselType}</h1>
+              <p>Salary: {vacancy.salary}</p>
+              <p>Duration: {vacancy.duration}</p>
+              <p>Join Date: {vacancy.joinDate}</p>
+<button onClick={()=> deletVacancy(vacancy.id)} >Delet Vacancy</button>
+
+<input placeholder='change duration' onChange={(e)=>setUptadedDuration(e.target.value)}/>
+<button onClick={()=> updateDuration(vacancy.id)}>Update duration </button>
+
+            </div>
+          ))}
+        </div>
+        <div>
+        <input type='file' onChange={(e)=> setFileUpload(e.target.files[0])}/>
+        <button onClick={uploadFile}>Upload File</button>
+      </div>
+      </div>
+      
+    </div>
+  )
 }
 
-export default MainApp;
 
-  // basename={process.env.PUBLIC_URL}
-//BrowserRouter
+export default App;
+
 
